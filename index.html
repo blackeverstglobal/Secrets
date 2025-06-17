@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aakash Anonymous</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0d0d0d;
+      color: #00ff9f;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border-radius: 10px;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      border: 1px solid #00ff9f;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    input {
+      padding: 12px;
+      width: 100%;
+      border: 1px solid #00ff9f;
+      border-radius: 6px;
+      background: #000;
+      color: #00ff9f;
+      font-size: 1em;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    button {
+      padding: 12px 20px;
+      background: #00ff9f;
+      border: none;
+      border-radius: 6px;
+      color: #000;
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background: #00cc80;
+    }
+
+    .preview {
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .preview img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 6px;
+      animation: slideUp 0.6s ease-in-out;
+    }
+
+    .error {
+      color: #ff4c4c;
+      margin-top: 10px;
+      font-weight: bold;
+      display: none;
+    }
+
+    #downloadBtn {
+      display: none;
+    }
+
+    #loader {
+      border: 5px solid #333;
+      border-top: 5px solid #00ff9f;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      0% { transform: translateY(20px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="mainCard">
+    <h1>Aakash Anonymous</h1>
+    <input type="text" id="personId" placeholder="Enter ID e.g. 00007372006" onkeydown="if(event.key==='Enter'){loadImage();}" />
+    <button onclick="loadImage()">Load Image</button>
+    <button id="downloadBtn" onclick="downloadImage()">Download Image</button>
+    <div id="loader"></div>
+    <div class="error" id="errorMsg">Image not found for this ID.</div>
+    <div class="preview" id="imageBox">
+      <img id="imagePreview" src="" alt="Image preview..." onerror="handleError()" onload="handleSuccess()" />
+    </div>
+  </div>
+
+  <script>
+    function loadImage() {
+      const id = document.getElementById("personId").value.trim();
+      const imageBox = document.getElementById("imageBox");
+      const img = document.getElementById("imagePreview");
+      const error = document.getElementById("errorMsg");
+      const downloadBtn = document.getElementById("downloadBtn");
+      const loader = document.getElementById("loader");
+
+      error.style.display = "none";
+      imageBox.style.display = "none";
+      downloadBtn.style.display = "none";
+
+      if (!/^\d+$/.test(id)) {
+        error.textContent = "Please enter a valid numeric ID.";
+        error.style.display = "block";
+        return;
+      }
+
+      if (id === "00007372006") {
+        error.textContent = "Access denied for this specific ID.";
+        error.style.display = "block";
+        return;
+      }
+
+      loader.style.display = "block";
+      img.src = `http://aakashleap.com:3131/Content/ScoreToolImage/Output${id}.jpg`;
+    }
+
+    function handleError() {
+      const loader = document.getElementById("loader");
+      const error = document.getElementById("errorMsg");
+      const imageBox = document.getElementById("imageBox");
+      const downloadBtn = document.getElementById("downloadBtn");
+
+      loader.style.display = "none";
+      imageBox.style.display = "none";
+      downloadBtn.style.display = "none";
+      error.style.display = "block";
+    }
+
+    function handleSuccess() {
+      const loader = document.getElementById("loader");
+      const imageBox = document.getElementById("imageBox");
+      const downloadBtn = document.getElementById("downloadBtn");
+      const error = document.getElementById("errorMsg");
+
+      loader.style.display = "none";
+      error.style.display = "none";
+      imageBox.style.display = "block";
+      downloadBtn.style.display = "block";
+    }
+
+    function downloadImage() {
+      const img = document.getElementById("imagePreview");
+      if (!img.src || img.style.display === "none") return;
+      const link = document.createElement("a");
+      link.href = img.src;
+      link.download = "image.jpg";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
